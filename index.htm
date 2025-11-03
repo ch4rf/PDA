@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Simulador PDA - L = {x* y^{2n} z^m z^{m+2} y^{3n} | n≥1, m≥2}</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app">
+        <!-- ===== SIDEBAR / MENÚ LATERAL ===== -->
+        <div id="sidebar" class="sidebar">
+            <div class="sidebar-header">
+                <h2>Menú</h2>
+                <button onclick="toggleSidebar()" class="close-btn">×</button>
+            </div>
+
+            <!-- PANEL 1: DEFINICIÓN FORMAL DEL AUTÓMATA -->
+            <div class="panel">
+                <h3>Autómata de Pila (Séptupla)</h3>
+                <div class="septuple">
+                    <p><strong>Q</strong> = {q₀, q₁, q₂, q₃, q₄, q₅, q₆, q₇, q₈, q₉, q₁₀, q₁₁, q₁₂}</p>
+                    <p><strong>Σ</strong> = {x, y, z}</p>
+                    <p><strong>Γ</strong> = {Y, Z}</p>
+                    <p><strong>q₀</strong> = q₀</p>
+                    <p><strong>Z₀</strong> = Z</p>
+                    <p><strong>F</strong> = {q₁₂}</p>
+                    <p><strong>δ</strong> = {</p>
+                    <div class="delta-function">
+                        (q₀, x, Z) = (q₀, Z),<br>
+                        (q₀, x, Y) = (q₀, Y),<br>
+                        (q₀, y, Y) = (q₁, Y),<br>
+                        (q₀, y, Z) = (q₁, Z),<br>
+                        (q₁, y, Y) = (q₀, YY),<br>
+                        (q₁, y, Z) = (q₀, YZ),<br>
+                        (q₀, z, Y) = (q₂, Y),<br>
+                        (q₂, z, Y) = (q₃, Y),<br>
+                        (q₃, z, Y) = (q₄, Y),<br>
+                        (q₄, z, Y) = (q₅, Y),<br>
+                        (q₅, z, Y) = (q₆, Y),<br>
+                        (q₆, z, Y) = (q₇, Y),<br>
+                        (q₇, z, Y) = (q₈, Y),<br>
+                        (q₈, z, Y) = (q₇, Y),<br>
+                        (q₇, y, Y) = (q₉, Y),<br>
+                        (q₉, y, Y) = (q₁₀, Y),<br>
+                        (q₁₀, y, ε) = (q₁₁, ε),<br>
+                        (q₁₁, y, Y) = (q₉, Y),<br>
+                        (q₁₁, ε, Z) = (q₁₂, ε)
+                    </div>
+                    <p>}</p>
+                </div>
+            </div>
+
+            <!-- PANEL 2: TABLA DE TRANSICIONES -->
+            <div class="panel">
+                <h3>Tabla de Transiciones</h3>
+                <div class="table-wrapper">
+                    <table id="trans-table">
+                        <thead>
+                            <tr>
+                                <th>Desde</th>
+                                <th>Lee</th>
+                                <th>Pop</th>
+                                <th>→</th>
+                                <th>Push</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- PANEL 3: PRUEBAS DE CADENAS -->
+            <div class="panel">
+                <h3>Pruebas de Cadenas</h3>
+                <div class="tests-section">
+                    <h4>Cadena Mínima Aceptada:</h4>
+                    <p><code>yyzzzzzzyyy</code></p>
+                    
+                    <h4>Cadena Promedio Aceptada:</h4>
+                    <p><code>yyyyzzzzzzzzyyyyyy</code></p>
+                </div>
+            </div>
+
+            <!-- PANEL 4: GRAMÁTICA Y DERIVACIONES -->
+            <div class="panel">
+                <h3>Gramática y Derivaciones</h3>
+                <div class="grammar-section">
+                    <h4>Producciones:</h4>
+                    <table class="grammar-table">
+                        <tbody>
+                            <tr><td>S → X Y Z F</td></tr>
+                            <tr><td>X → x X | λ</td></tr>
+                            <tr><td>Y → y y Y'</td></tr>
+                            <tr><td>Y' → y y Y' | λ</td></tr>
+                            <tr><td>Z → z z z z z z Z'</td></tr>
+                            <tr><td>Z' → z z Z' | λ</td></tr>
+                            <tr><td>F → y y y F'</td></tr>
+                            <tr><td>F' → y y y F' | λ</td></tr>
+                        </tbody>
+                    </table>
+                    
+                    <h4>Cadena Mínima Aceptada: yyzzzzzzyyy</h4>
+                    <div class="derivation">
+                        S → X Y Z F → Y Z F → y y Y' Z F → y y Z F<br>
+                        → y y z z z z z z Z' F → y y z z z z z z F<br>
+                        → y y z z z z z z y y y F' → yyzzzzzzyyy
+                    </div>
+                    
+                    <h4>Cadena Promedio Aceptada: yyyyzzzzzzzzyyyyyy</h4>
+                    <div class="derivation">
+                        S → X Y Z F → Y Z F → y y Y' Z F → y y y y Y' Z F<br>
+                        → y y y y Z F → y y y y z z z z z z Z' F<br>
+                        → y y y y z z z z z z z z Z' F → y y y y z z z z z z z z F<br>
+                        → y y y y z z z z z z z z y y y F'<br>
+                        → y y y y z z z z z z z z y y y y y y F'<br>
+                        → yyyyzzzzzzzzyyyyyy
+                    </div>
+                </div>
+            </div>
+
+            <!-- PANEL 5: EXPRESIÓN REGULAR -->
+            <div class="panel">
+                <h3>Expresión Regular</h3>
+                <div class="regex-section">
+                    <p><strong>L = x*(yy)<sup>+</sup> z<sup>m</sup> z<sup>m+2</sup> (yyy)<sup>+</sup></strong></p>
+                    <p>Donde: n ≥ 1, m ≥ 2</p>
+                </div>
+            </div>
+
+            <!-- PANEL 6: DESCRIPCIÓN DE FUNCIONAMIENTO -->
+            <div class="panel">
+                <h3>Descripción de Funcionamiento</h3>
+                <div class="description-section">
+                    <p>Este autómata de pila reconoce cadenas con la estructura:</p>
+                    <ol>
+                        <li>Cero o más <strong>x</strong> (opcionales)</li>
+                        <li><strong>2n</strong> símbolos <strong>y</strong> (n ≥ 1)</li>
+                        <li><strong>m</strong> símbolos <strong>z</strong> seguidos de <strong>m+2</strong> símbolos <strong>z</strong></li>
+                        <li><strong>3n</strong> símbolos <strong>y</strong> al final</li>
+                    </ol>
+                    <p>La pila se usa para contar y verificar las relaciones entre los bloques.</p>
+                </div>
+            </div>
+
+            <!-- PANEL 7: CONTROLES GLOBALES -->
+            <div class="panel">
+                <div class="btn-group menu-btn-group">
+                    <button onclick="pda.reset()">Reinicio Completo</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== CONTENIDO PRINCIPAL ===== -->
+        <div class="main">
+            <div class="header">
+                <button onclick="toggleSidebar()" class="menu-btn">Menú</button>
+                <h1>Simulador PDA</h1>
+            </div>
+
+            <div class="content">
+                <!-- SECCIÓN: GRAFO + VISUALIZACIÓN DE PILA -->
+                <div class="graph-and-stack">
+                    <div class="graph-section">
+                        <canvas id="graph" width="1400" height="500"></canvas>
+                    </div>
+                    
+                    <!-- VISUALIZACIÓN DE PILA -->
+                    <div class="stack-sidebar">
+                        <div class="stack-title">VISUALIZACIÓN DE PILA</div>
+                        <div class="stack-container">
+                            <div class="stack-elements" id="stack-elements">
+                                <div class="stack-element vacio">∅</div>
+                            </div>
+                        </div>
+                        <div class="stack-operation" id="stack-operation">
+                            Esperando simulación...
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SECCIÓN: CONTROLES DE SIMULACIÓN -->
+                <div class="controls-section">
+                    <div class="controls-inline">
+                        <input type="text" id="input-w" placeholder="Ingresa cadena (ej: yyzzzzzzyyy)">
+                        <div class="btn-group">
+                            <button onclick="pda.load()">Cargar</button>
+                            <button onclick="pda.step()">Paso</button>
+                            <button onclick="pda.run()">Ejecutar Todo</button>
+                            <button onclick="pda.reset()">Limpiar</button>
+                        </div>
+                    </div>
+                    <div id="status" class="status"></div>
+                </div>
+
+                <!-- SECCIÓN: FUNCIÓN EXTENDIDA / DESCRIPCIONES INSTANTÁNEAS -->
+                <div class="trace-section">
+                    <h3>Función Extendida (Descripciones Instantáneas)</h3>
+                    <div class="table-wrapper">
+                        <table id="trace-table">
+                            <thead>
+                                <tr>
+                                    <th>Paso</th>
+                                    <th>Estado</th>
+                                    <th>Restante</th>
+                                    <th>Pila</th>
+                                    <th>Transición</th>
+                                </tr>
+                            </thead>
+                            <tbody id="trace-tbody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
